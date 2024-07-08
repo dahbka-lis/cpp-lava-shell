@@ -8,4 +8,5 @@ add_executable(cpp_lava_shell main.cpp
         src/reader/reader.cpp
         src/parser/parser.cpp
         src/command/command.cpp
-        src/lavash/lavash.cpp)
+        src/lavash/lavash.cpp
+        src/tokenizer/tokenizer.cpp)
