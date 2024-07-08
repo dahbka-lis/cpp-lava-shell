@@ -23,24 +23,29 @@ struct PipeToken {
 
 struct InputToken {
     bool operator==(const InputToken &other) const;
+
+    std::string filename;
 };
 
 struct OutputToken {
     bool operator==(const OutputToken &other) const;
+
+    std::string filename;
 };
 
 struct LogicAndToken {
-    bool operator==(const PipeToken &other) const;
+    bool operator==(LogicAndToken other) const;
 };
 
 struct LogicOrToken {
-    bool operator==(const PipeToken &other) const;
+    bool operator==(const LogicOrToken &other) const;
 };
 
 enum class BracketToken { OPEN, CLOSE };
 
-using Token = std::variant<PathToken, ArgToken, PipeToken, LogicAndToken,
-                           LogicOrToken, BracketToken>;
+using Token =
+    std::variant<PathToken, ArgToken, PipeToken, InputToken, OutputToken,
+                 LogicAndToken, LogicOrToken, BracketToken>;
 
 class Tokenizer {
 public:

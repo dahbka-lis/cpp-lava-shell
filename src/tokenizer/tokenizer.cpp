@@ -13,18 +13,18 @@ bool Lavash::PipeToken::operator==(const Lavash::PipeToken &other) const {
 }
 
 bool Lavash::InputToken::operator==(const Lavash::InputToken &other) const {
-    return true;
+    return filename == other.filename;
 }
 
 bool Lavash::OutputToken::operator==(const Lavash::OutputToken &other) const {
+    return filename == other.filename;
+}
+
+bool Lavash::LogicAndToken::operator==(LogicAndToken other) const {
     return true;
 }
 
-bool Lavash::LogicAndToken::operator==(const Lavash::PipeToken &other) const {
-    return true;
-}
-
-bool Lavash::LogicOrToken::operator==(const Lavash::PipeToken &other) const {
+bool Lavash::LogicOrToken::operator==(const Lavash::LogicOrToken &other) const {
     return true;
 }
 

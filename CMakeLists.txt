@@ -10,3 +10,15 @@ add_executable(cpp_lava_shell main.cpp
         src/command/command.cpp
         src/lavash/lavash.cpp
         src/tokenizer/tokenizer.cpp)
+
+Include(FetchContent)
+FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG        v3.4.0
+)
+
+FetchContent_MakeAvailable(Catch2)
+
+add_executable(test_tokenizer tests/test_tokenizer.cpp src/tokenizer/tokenizer.cpp)
+target_link_libraries(test_tokenizer PRIVATE Catch2::Catch2WithMain)
