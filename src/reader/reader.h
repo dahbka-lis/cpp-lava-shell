@@ -7,8 +7,10 @@ class Reader {
 public:
     Reader() = delete;
 
-    static std::string Read(int32_t fd);
+    static std::string ReadLine(std::istream *stream = nullptr);
 
-    static std::string ReadLine(int32_t fd);
+    static void TrimSpaces(std::string &str);
+
+    static std::string ReadTrimmedLine(std::istream *stream = nullptr);
 };
 } // namespace Lavash
