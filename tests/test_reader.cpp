@@ -6,7 +6,8 @@ using namespace Lavash;
 
 TEST_CASE("Simple") {
     std::istringstream ss{"foo bar"};
-    Reader reader{&ss};
+    Reader reader;
+    reader.SetStream(&ss);
 
     REQUIRE(!reader.IsEnd());
 
@@ -19,7 +20,8 @@ TEST_CASE("Simple") {
 
 TEST_CASE("Clear") {
     std::istringstream ss{""};
-    Reader reader{&ss};
+    Reader reader;
+    reader.SetStream(&ss);
 
     REQUIRE(reader.IsEnd());
     REQUIRE(reader.ReadWord().empty());
@@ -31,7 +33,8 @@ TEST_CASE("Clear") {
 
 TEST_CASE("Long") {
     std::istringstream ss{"a b c d e f g"};
-    Reader reader{&ss};
+    Reader reader;
+    reader.SetStream(&ss);
 
     REQUIRE(!reader.IsEnd());
 
@@ -59,7 +62,8 @@ TEST_CASE("Long") {
 
 TEST_CASE("Command") {
     std::istringstream ss{"echo hello world | wc > file.txt"};
-    Reader reader{&ss};
+    Reader reader;
+    reader.SetStream(&ss);
 
     REQUIRE(!reader.IsEnd());
 
@@ -87,7 +91,8 @@ TEST_CASE("Command") {
 
 TEST_CASE("Spaces") {
     std::istringstream ss{"   cat          file.txt     |     echo   "};
-    Reader reader{&ss};
+    Reader reader;
+    reader.SetStream(&ss);
 
     REQUIRE(!reader.IsEnd());
 
@@ -106,7 +111,8 @@ TEST_CASE("Spaces") {
 
 TEST_CASE("Spaces and tabs") {
     std::istringstream ss{"  \t \t  ls  \t  -a   | \t\t  mkdir  \t\t  "};
-    Reader reader{&ss};
+    Reader reader;
+    reader.SetStream(&ss);
 
     REQUIRE(!reader.IsEnd());
 
@@ -120,5 +126,69 @@ TEST_CASE("Spaces and tabs") {
     REQUIRE(!reader.IsEnd());
 
     REQUIRE(reader.ReadWord() == "mkdir");
+    REQUIRE(reader.IsEnd());
+}
+
+TEST_CASE("Brackets") {
+    std::istringstream ss{"((()))"};
+    Reader reader;
+    reader.SetStream(&ss);
+
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "(");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "(");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "(");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == ")");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == ")");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == ")");
+    REQUIRE(reader.IsEnd());
+}
+
+TEST_CASE("Random") {
+    std::istringstream ss{"(text) for >read < write ) ("};
+    Reader reader;
+    reader.SetStream(&ss);
+
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "(");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "text");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == ")");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "for");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == ">");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "read");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "<");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "write");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == ")");
+    REQUIRE(!reader.IsEnd());
+
+    REQUIRE(reader.ReadWord() == "(");
     REQUIRE(reader.IsEnd());
 }

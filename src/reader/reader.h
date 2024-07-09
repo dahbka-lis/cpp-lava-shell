@@ -1,5 +1,6 @@
 #pragma once
 
+#include <regex>
 #include <sstream>
 #include <string>
 
@@ -15,10 +16,19 @@ public:
 private:
     void ConfigureNextWord();
 
+    void SkipSpaces();
+
+    bool IsInputOutput();
+
+    bool IsBracket();
+
+    bool IsSpecialSymbol();
+
     static void TrimSpaces(std::string &str);
 
 private:
     std::stringstream ss_;
     std::string next_word_;
+    std::regex bracket_pattern_{"^([^()]*(\\(|\\))+)$"};
 };
 } // namespace Lavash

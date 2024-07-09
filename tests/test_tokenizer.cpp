@@ -174,45 +174,45 @@ TEST_CASE("Brackets 1") {
     REQUIRE_THROWS(tokenizer.GetNextToken());
 }
 
-// TEST_CASE("Brackets 2") {
-//     std::istringstream ss{"((()()))"};
-//     Tokenizer tokenizer{&ss};
-//
-//     REQUIRE(tokenizer.HasNext());
-//     REQUIRE(tokenizer.GetNextToken() ==
-//             Token{BracketToken{BracketToken::OPEN}});
-//
-//     REQUIRE(tokenizer.HasNext());
-//     REQUIRE(tokenizer.GetNextToken() ==
-//             Token{BracketToken{BracketToken::OPEN}});
-//
-//     REQUIRE(tokenizer.HasNext());
-//     REQUIRE(tokenizer.GetNextToken() ==
-//             Token{BracketToken{BracketToken::OPEN}});
-//
-//     REQUIRE(tokenizer.HasNext());
-//     REQUIRE(tokenizer.GetNextToken() ==
-//             Token{BracketToken{BracketToken::CLOSE}});
-//
-//     REQUIRE(tokenizer.HasNext());
-//     REQUIRE(tokenizer.GetNextToken() ==
-//             Token{BracketToken{BracketToken::OPEN}});
-//
-//     REQUIRE(tokenizer.HasNext());
-//     REQUIRE(tokenizer.GetNextToken() ==
-//             Token{BracketToken{BracketToken::CLOSE}});
-//
-//     REQUIRE(tokenizer.HasNext());
-//     REQUIRE(tokenizer.GetNextToken() ==
-//             Token{BracketToken{BracketToken::CLOSE}});
-//
-//     REQUIRE(tokenizer.HasNext());
-//     REQUIRE(tokenizer.GetNextToken() ==
-//             Token{BracketToken{BracketToken::CLOSE}});
-//
-//     REQUIRE(!tokenizer.HasNext());
-//     REQUIRE_THROWS(tokenizer.GetNextToken());
-// }
+TEST_CASE("Brackets 2") {
+    std::istringstream ss{"((()()))"};
+    Tokenizer tokenizer{&ss};
+
+    REQUIRE(tokenizer.HasNext());
+    REQUIRE(tokenizer.GetNextToken() ==
+            Token{BracketToken{BracketToken::OPEN}});
+
+    REQUIRE(tokenizer.HasNext());
+    REQUIRE(tokenizer.GetNextToken() ==
+            Token{BracketToken{BracketToken::OPEN}});
+
+    REQUIRE(tokenizer.HasNext());
+    REQUIRE(tokenizer.GetNextToken() ==
+            Token{BracketToken{BracketToken::OPEN}});
+
+    REQUIRE(tokenizer.HasNext());
+    REQUIRE(tokenizer.GetNextToken() ==
+            Token{BracketToken{BracketToken::CLOSE}});
+
+    REQUIRE(tokenizer.HasNext());
+    REQUIRE(tokenizer.GetNextToken() ==
+            Token{BracketToken{BracketToken::OPEN}});
+
+    REQUIRE(tokenizer.HasNext());
+    REQUIRE(tokenizer.GetNextToken() ==
+            Token{BracketToken{BracketToken::CLOSE}});
+
+    REQUIRE(tokenizer.HasNext());
+    REQUIRE(tokenizer.GetNextToken() ==
+            Token{BracketToken{BracketToken::CLOSE}});
+
+    REQUIRE(tokenizer.HasNext());
+    REQUIRE(tokenizer.GetNextToken() ==
+            Token{BracketToken{BracketToken::CLOSE}});
+
+    REQUIRE(!tokenizer.HasNext());
+    REQUIRE_THROWS(tokenizer.GetNextToken());
+}
 
 TEST_CASE("All") {
     std::istringstream ss{"cat file > output.txt || (wc <input.txt | echo)"};

@@ -34,7 +34,50 @@ bool Reader::IsEnd() const {
 }
 
 void Reader::ConfigureNextWord() {
+    SkipSpaces();
+
+    if (IsSpecialSymbol()) {
+        next_word_ = std::string{static_cast<char>(ss_.get())};
+        return;
+    }
+
     ss_ >> next_word_;
+
+    if (std::regex_search(next_word_, bracket_pattern_)) {
+        auto idx = std::min(next_word_.find('('), next_word_.find(')'));
+        auto erase_it = next_word_.begin() + static_cast<long>(idx);
+
+        for (auto it = next_word_.end() - 1; it >= erase_it; --it) {
+            ss_.putback(*it);
+        }
+
+        if (idx == 0) {
+            ConfigureNextWord();
+            return;
+        }
+
+        next_word_.erase(erase_it, next_word_.end());
+    }
+}
+
+void Reader::SkipSpaces() {
+    while (std::isspace(ss_.peek())) {
+        ss_.get();
+    }
+}
+
+bool Reader::IsInputOutput() {
+    auto let = static_cast<char>(ss_.peek());
+    return let == '>' || let == '<';
+}
+
+bool Reader::IsBracket() {
+    auto let = static_cast<char>(ss_.peek());
+    return let == '(' || let == ')';
+}
+
+bool Reader::IsSpecialSymbol() {
+    return IsInputOutput() || IsBracket();
 }
 
 void Reader::TrimSpaces(std::string &str) {
