@@ -4,16 +4,37 @@
 #include <iostream>
 
 namespace Lavash {
-std::string Reader::ReadLine(std::istream *stream) {
+void Reader::SetStream(std::istream *stream) {
     std::string line;
 
     if (stream == nullptr) {
         std::getline(std::cin, line);
-        return line;
+    } else {
+        std::getline(*stream, line);
     }
 
-    std::getline(*stream, line);
-    return line;
+    TrimSpaces(line);
+    ss_ = std::stringstream{line};
+
+    ConfigureNextWord();
+}
+
+std::string Reader::ReadWord() {
+    if (IsEnd()) {
+        return std::string{};
+    }
+
+    std::string word = std::move(next_word_);
+    ConfigureNextWord();
+    return word;
+}
+
+bool Reader::IsEnd() const {
+    return ss_.eof() && next_word_.empty();
+}
+
+void Reader::ConfigureNextWord() {
+    ss_ >> next_word_;
 }
 
 void Reader::TrimSpaces(std::string &str) {
@@ -41,11 +62,5 @@ void Reader::TrimSpaces(std::string &str) {
     }
 
     str.erase(destination, str.end());
-}
-
-std::string Reader::ReadTrimmedLine(std::istream *stream) {
-    auto line = ReadLine(stream);
-    TrimSpaces(line);
-    return line;
 }
 } // namespace Lavash

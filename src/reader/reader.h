@@ -1,16 +1,24 @@
 #pragma once
 
+#include <sstream>
 #include <string>
 
 namespace Lavash {
 class Reader {
 public:
-    Reader() = delete;
+    void SetStream(std::istream *stream = nullptr);
 
-    static std::string ReadLine(std::istream *stream = nullptr);
+    std::string ReadWord();
+
+    bool IsEnd() const;
+
+private:
+    void ConfigureNextWord();
 
     static void TrimSpaces(std::string &str);
 
-    static std::string ReadTrimmedLine(std::istream *stream = nullptr);
+private:
+    std::stringstream ss_;
+    std::string next_word_;
 };
 } // namespace Lavash

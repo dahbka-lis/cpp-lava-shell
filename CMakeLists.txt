@@ -20,5 +20,8 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(Catch2)
 
-add_executable(test_tokenizer tests/test_tokenizer.cpp src/tokenizer/tokenizer.cpp)
+add_executable(test_tokenizer tests/test_tokenizer.cpp src/tokenizer/tokenizer.cpp src/reader/reader.cpp)
 target_link_libraries(test_tokenizer PRIVATE Catch2::Catch2WithMain)
+
+add_executable(test_reader tests/test_reader.cpp src/reader/reader.cpp)
+target_link_libraries(test_reader PRIVATE Catch2::Catch2WithMain)

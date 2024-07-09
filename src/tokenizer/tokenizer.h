@@ -1,16 +1,11 @@
 #pragma once
 
+#include "../reader/reader.h"
+
 #include <istream>
-#include <string>
 #include <variant>
 
 namespace Lavash {
-struct PathToken {
-    bool operator==(const PathToken &other) const;
-
-    std::string path;
-};
-
 struct ArgToken {
     bool operator==(const ArgToken &other) const;
 
@@ -23,18 +18,14 @@ struct PipeToken {
 
 struct InputToken {
     bool operator==(const InputToken &other) const;
-
-    std::string filename;
 };
 
 struct OutputToken {
     bool operator==(const OutputToken &other) const;
-
-    std::string filename;
 };
 
 struct LogicAndToken {
-    bool operator==(LogicAndToken other) const;
+    bool operator==(const LogicAndToken &other) const;
 };
 
 struct LogicOrToken {
@@ -43,9 +34,8 @@ struct LogicOrToken {
 
 enum class BracketToken { OPEN, CLOSE };
 
-using Token =
-    std::variant<PathToken, ArgToken, PipeToken, InputToken, OutputToken,
-                 LogicAndToken, LogicOrToken, BracketToken>;
+using Token = std::variant<ArgToken, PipeToken, InputToken, OutputToken,
+                           LogicAndToken, LogicOrToken, BracketToken>;
 
 class Tokenizer {
 public:
@@ -56,6 +46,6 @@ public:
     Token GetNextToken();
 
 private:
-    std::istream *istream_;
+    Reader reader_;
 };
 } // namespace Lavash

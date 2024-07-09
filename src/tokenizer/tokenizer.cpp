@@ -1,40 +1,66 @@
 #include "tokenizer.h"
 
-bool Lavash::PathToken::operator==(const Lavash::PathToken &other) const {
-    return path == other.path;
-}
+#include <stdexcept>
 
-bool Lavash::ArgToken::operator==(const Lavash::ArgToken &other) const {
+namespace Lavash {
+bool ArgToken::operator==(const ArgToken &other) const {
     return arg == other.arg;
 }
 
-bool Lavash::PipeToken::operator==(const Lavash::PipeToken &other) const {
+bool PipeToken::operator==(const PipeToken &other) const {
     return true;
 }
 
-bool Lavash::InputToken::operator==(const Lavash::InputToken &other) const {
-    return filename == other.filename;
-}
-
-bool Lavash::OutputToken::operator==(const Lavash::OutputToken &other) const {
-    return filename == other.filename;
-}
-
-bool Lavash::LogicAndToken::operator==(LogicAndToken other) const {
+bool InputToken::operator==(const InputToken &other) const {
     return true;
 }
 
-bool Lavash::LogicOrToken::operator==(const Lavash::LogicOrToken &other) const {
+bool OutputToken::operator==(const OutputToken &other) const {
     return true;
 }
 
-Lavash::Tokenizer::Tokenizer(std::istream *istream) : istream_(istream) {
+bool LogicAndToken::operator==(const LogicAndToken &other) const {
+    return true;
 }
 
-bool Lavash::Tokenizer::HasNext() const {
-    return false;
+bool LogicOrToken::operator==(const LogicOrToken &other) const {
+    return true;
 }
 
-Lavash::Token Lavash::Tokenizer::GetNextToken() {
-    return Lavash::Token();
+Tokenizer::Tokenizer(std::istream *istream) {
+    reader_.SetStream(istream);
 }
+
+bool Tokenizer::HasNext() const {
+    return !reader_.IsEnd();
+}
+
+Token Tokenizer::GetNextToken() {
+    if (!HasNext()) {
+        throw std::runtime_error("No more tokens");
+    }
+
+    auto word = reader_.ReadWord();
+
+    std::hash<std::string> hash;
+    auto hash_word = hash(word);
+
+    if (hash_word == hash("&&")) {
+        return Token{LogicAndToken{}};
+    } else if (hash_word == hash("||")) {
+        return Token{LogicOrToken{}};
+    } else if (word[0] == '<') {
+        return Token{InputToken{}};
+    } else if (word[0] == '>') {
+        return Token{OutputToken{}};
+    } else if (word[0] == '(') {
+        return Token{BracketToken{BracketToken::OPEN}};
+    } else if (word[0] == ')') {
+        return Token{BracketToken{BracketToken::CLOSE}};
+    } else if (hash_word == hash("|")) {
+        return Token{PipeToken{}};
+    } else {
+        return Token{ArgToken{word}};
+    }
+}
+} // namespace Lavash
