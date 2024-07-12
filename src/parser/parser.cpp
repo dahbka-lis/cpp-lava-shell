@@ -1,4 +1,4 @@
-#include "parser.h"
+#include "parser.hpp"
 
 namespace Lavash {
 std::string Parser::ParseLine(const std::string &line) {

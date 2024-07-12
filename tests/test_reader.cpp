@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 
-#include "../src/reader/reader.h"
+#include "../src/reader/reader.hpp"
 
 using namespace Lavash;
 

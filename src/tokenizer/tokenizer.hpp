@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../reader/reader.h"
+#include "../reader/reader.hpp"
 
 #include <istream>
 #include <variant>
