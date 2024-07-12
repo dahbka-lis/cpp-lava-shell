@@ -9,7 +9,8 @@ add_executable(cpp_lava_shell main.cpp
         src/parser/parser.cpp
         src/command/command.cpp
         src/lavash/lavash.cpp
-        src/tokenizer/tokenizer.cpp)
+        src/tokenizer/tokenizer.cpp
+        src/nodes/nodes.cpp)
 
 Include(FetchContent)
 FetchContent_Declare(

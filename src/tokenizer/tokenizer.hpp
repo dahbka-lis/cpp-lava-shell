@@ -1,13 +1,12 @@
 #pragma once
 
+#include "../details/constants.hpp"
 #include "../reader/reader.hpp"
 
 #include <istream>
 #include <variant>
 
 namespace Lavash {
-enum class TokenType { ARG, PIPE, INPUT, OUTPUT, AND, OR, L_PAREN, R_PAREN };
-
 struct Token {
     bool operator==(const Token &other) const;
 
