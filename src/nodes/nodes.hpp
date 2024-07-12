@@ -19,6 +19,10 @@ class CommandNode : public Node {
 public:
     int Execute() override;
 
+    void SetCommand(Command &&command) {
+        command_ = command;
+    }
+
 private:
     Command command_;
 };

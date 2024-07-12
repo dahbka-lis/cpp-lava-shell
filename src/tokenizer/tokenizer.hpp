@@ -20,9 +20,14 @@ public:
 
     bool HasNext() const;
 
+    void Next();
+
+    Token GetToken() const;
+
     Token GetNextToken();
 
 private:
     Reader reader_;
+    Token current_token_;
 };
 } // namespace Lavash
