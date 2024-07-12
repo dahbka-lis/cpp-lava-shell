@@ -6,36 +6,14 @@
 #include <variant>
 
 namespace Lavash {
-struct ArgToken {
-    bool operator==(const ArgToken &other) const;
+enum class TokenType { ARG, PIPE, INPUT, OUTPUT, AND, OR, L_PAREN, R_PAREN };
 
-    std::string arg;
+struct Token {
+    bool operator==(const Token &other) const;
+
+    TokenType type;
+    std::string data;
 };
-
-struct PipeToken {
-    bool operator==(const PipeToken &other) const;
-};
-
-struct InputToken {
-    bool operator==(const InputToken &other) const;
-};
-
-struct OutputToken {
-    bool operator==(const OutputToken &other) const;
-};
-
-struct LogicAndToken {
-    bool operator==(const LogicAndToken &other) const;
-};
-
-struct LogicOrToken {
-    bool operator==(const LogicOrToken &other) const;
-};
-
-enum class BracketToken { OPEN, CLOSE };
-
-using Token = std::variant<ArgToken, PipeToken, InputToken, OutputToken,
-                           LogicAndToken, LogicOrToken, BracketToken>;
 
 class Tokenizer {
 public:

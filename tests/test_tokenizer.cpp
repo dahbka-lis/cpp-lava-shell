@@ -9,10 +9,10 @@ TEST_CASE("Simple") {
     Tokenizer tokenizer{&ss};
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"foo"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "foo"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"bar"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "bar"});
 
     REQUIRE(!tokenizer.HasNext());
     REQUIRE_THROWS(tokenizer.GetNextToken());
@@ -23,16 +23,16 @@ TEST_CASE("Arguments") {
     Tokenizer tokenizer{&ss};
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"echo"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "echo"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"hello"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "hello"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"world"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "world"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"!"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "!"});
 
     REQUIRE(!tokenizer.HasNext());
     REQUIRE_THROWS(tokenizer.GetNextToken());
@@ -43,22 +43,22 @@ TEST_CASE("Pipes") {
     Tokenizer tokenizer{&ss};
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"echo"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "echo"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"linux"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "linux"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{PipeToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::PIPE});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"wc"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "wc"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{PipeToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::PIPE});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"cat"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "cat"});
 
     REQUIRE(!tokenizer.HasNext());
     REQUIRE_THROWS(tokenizer.GetNextToken());
@@ -69,19 +69,19 @@ TEST_CASE("Files 1") {
     Tokenizer tokenizer{&ss};
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"cat"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "cat"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{InputToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::INPUT});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"input.txt"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "input.txt"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{OutputToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::OUTPUT});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"output.txt"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "output.txt"});
 
     REQUIRE(!tokenizer.HasNext());
     REQUIRE_THROWS(tokenizer.GetNextToken());
@@ -93,34 +93,34 @@ TEST_CASE("Files 2") {
     Tokenizer tokenizer{&ss};
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"echo"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "echo"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"hello"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "hello"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{OutputToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::OUTPUT});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"output.txt"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "output.txt"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{PipeToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::PIPE});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"wc"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "wc"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{InputToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::INPUT});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"output.txt"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "output.txt"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{OutputToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::OUTPUT});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"output2.txt"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "output2.txt"});
 
     REQUIRE(!tokenizer.HasNext());
     REQUIRE_THROWS(tokenizer.GetNextToken());
@@ -131,19 +131,19 @@ TEST_CASE("Logic") {
     Tokenizer tokenizer{&ss};
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"true"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "true"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{LogicAndToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::AND});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"false"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "false"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{LogicOrToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::OR});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"true"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "true"});
 
     REQUIRE(!tokenizer.HasNext());
     REQUIRE_THROWS(tokenizer.GetNextToken());
@@ -154,21 +154,19 @@ TEST_CASE("Brackets 1") {
     Tokenizer tokenizer{&ss};
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::OPEN}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::L_PAREN});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"true"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "true"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{LogicOrToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::OR});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"false"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "false"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::CLOSE}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::R_PAREN});
 
     REQUIRE(!tokenizer.HasNext());
     REQUIRE_THROWS(tokenizer.GetNextToken());
@@ -179,36 +177,28 @@ TEST_CASE("Brackets 2") {
     Tokenizer tokenizer{&ss};
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::OPEN}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::L_PAREN});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::OPEN}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::L_PAREN});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::OPEN}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::L_PAREN});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::CLOSE}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::R_PAREN});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::OPEN}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::L_PAREN});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::CLOSE}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::R_PAREN});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::CLOSE}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::R_PAREN});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::CLOSE}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::R_PAREN});
 
     REQUIRE(!tokenizer.HasNext());
     REQUIRE_THROWS(tokenizer.GetNextToken());
@@ -219,42 +209,40 @@ TEST_CASE("All") {
     Tokenizer tokenizer{&ss};
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"cat"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "cat"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"file"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "file"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{OutputToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::OUTPUT});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"output.txt"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "output.txt"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{LogicOrToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::OR});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::OPEN}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::L_PAREN});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"wc"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "wc"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{InputToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::INPUT});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"input.txt"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "input.txt"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{PipeToken{}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::PIPE});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() == Token{ArgToken{"echo"}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::ARG, "echo"});
 
     REQUIRE(tokenizer.HasNext());
-    REQUIRE(tokenizer.GetNextToken() ==
-            Token{BracketToken{BracketToken::CLOSE}});
+    REQUIRE(tokenizer.GetNextToken() == Token{TokenType::R_PAREN});
 
     REQUIRE(!tokenizer.HasNext());
     REQUIRE_THROWS(tokenizer.GetNextToken());

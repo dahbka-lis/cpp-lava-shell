@@ -3,28 +3,8 @@
 #include <stdexcept>
 
 namespace Lavash {
-bool ArgToken::operator==(const ArgToken &other) const {
-    return arg == other.arg;
-}
-
-bool PipeToken::operator==(const PipeToken &other) const {
-    return true;
-}
-
-bool InputToken::operator==(const InputToken &other) const {
-    return true;
-}
-
-bool OutputToken::operator==(const OutputToken &other) const {
-    return true;
-}
-
-bool LogicAndToken::operator==(const LogicAndToken &other) const {
-    return true;
-}
-
-bool LogicOrToken::operator==(const LogicOrToken &other) const {
-    return true;
+bool Token::operator==(const Token &other) const {
+    return type == other.type && data == other.data;
 }
 
 Tokenizer::Tokenizer(std::istream *istream) {
@@ -46,21 +26,21 @@ Token Tokenizer::GetNextToken() {
     auto hash_word = hash(word);
 
     if (hash_word == hash("&&")) {
-        return Token{LogicAndToken{}};
+        return {TokenType::AND};
     } else if (hash_word == hash("||")) {
-        return Token{LogicOrToken{}};
+        return {TokenType::OR};
     } else if (word[0] == '<') {
-        return Token{InputToken{}};
+        return {TokenType::INPUT};
     } else if (word[0] == '>') {
-        return Token{OutputToken{}};
+        return {TokenType::OUTPUT};
     } else if (word[0] == '(') {
-        return Token{BracketToken{BracketToken::OPEN}};
+        return {TokenType::L_PAREN};
     } else if (word[0] == ')') {
-        return Token{BracketToken{BracketToken::CLOSE}};
-    } else if (hash_word == hash("|")) {
-        return Token{PipeToken{}};
+        return {TokenType::R_PAREN};
+    } else if (word[0] == '|') {
+        return {TokenType::PIPE};
     } else {
-        return Token{ArgToken{word}};
+        return {TokenType::ARG, word};
     }
 }
 } // namespace Lavash
