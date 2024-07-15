@@ -55,7 +55,7 @@ NodePtr Parser::ParseTerm() {
 NodePtr Parser::ParseFactor() {
     if (CurrentToken().type == TokenType::L_PAREN) {
         Eat(TokenType::L_PAREN);
-        auto node = ParseExpression();
+        auto node = std::make_shared<ParenthesesNode>(ParseExpression());
         Eat(TokenType::R_PAREN);
         return node;
     }

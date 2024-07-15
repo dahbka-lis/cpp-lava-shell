@@ -35,8 +35,27 @@ public:
     int Execute() override;
 
 private:
+    int ExecuteOr();
+
+    int ExecuteAnd();
+
+    static int SelectOr(const NodePtr &first, const NodePtr &second);
+
+    static int SelectAnd(const NodePtr &first, const NodePtr &second);
+
+private:
     BinaryOpType type_;
-    NodePtr left_;
-    NodePtr right_;
+    NodePtr left_ = nullptr;
+    NodePtr right_ = nullptr;
+};
+
+class ParenthesesNode : public Node {
+public:
+    explicit ParenthesesNode(NodePtr node);
+
+    int Execute() override;
+
+private:
+    NodePtr node_ = nullptr;
 };
 } // namespace Lavash

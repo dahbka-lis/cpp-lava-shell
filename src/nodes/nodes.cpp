@@ -13,19 +13,75 @@ BinaryOpNode::BinaryOpNode(BinaryOpType type, NodePtr left, NodePtr right)
 }
 
 int Lavash::BinaryOpNode::Execute() {
-    assert(left_ != nullptr && "Left node should not be null");
-    assert(right_ != nullptr && "Right node should not be null");
-
-    auto code = left_->Execute();
     if (type_ == BinaryOpType::AND) {
-        if (code != 0)
-            return code;
-
+        return ExecuteAnd();
     } else if (type_ == BinaryOpType::OR) {
-        if (code == 0)
-            return code;
+        return ExecuteOr();
     }
 
-    return right_->Execute();
+    return 0;
+}
+
+int BinaryOpNode::ExecuteOr() {
+    if (dynamic_cast<CommandNode *>(left_.get())) {
+        if (dynamic_cast<CommandNode *>(right_.get())) {
+            return SelectOr(left_, right_);
+        }
+
+        auto right_ptr = dynamic_cast<BinaryOpNode *>(right_.get());
+        if (right_ptr && right_ptr->type_ == BinaryOpType::OR) {
+            return SelectOr(left_, right_);
+        }
+
+        return SelectOr(right_, left_);
+    }
+
+    if (dynamic_cast<BinaryOpNode *>(left_.get())) {
+        auto right_ptr = dynamic_cast<BinaryOpNode *>(right_.get());
+        if (right_ptr && right_ptr->type_ == BinaryOpType::AND) {
+            return SelectOr(right_, left_);
+        }
+
+        if (dynamic_cast<ParenthesesNode *>(right_.get())) {
+            return SelectOr(right_, left_);
+        }
+
+        return SelectOr(left_, right_);
+    }
+
+    return SelectOr(left_, right_);
+}
+
+int BinaryOpNode::ExecuteAnd() {
+    if (dynamic_cast<ParenthesesNode *>(right_.get())) {
+        return SelectAnd(right_, left_);
+    }
+
+    return SelectAnd(left_, right_);
+}
+
+int BinaryOpNode::SelectOr(const NodePtr &first, const NodePtr &second) {
+    auto code = first->Execute();
+    if (code == 0) {
+        return code;
+    }
+
+    return second->Execute();
+}
+
+int BinaryOpNode::SelectAnd(const NodePtr &first, const NodePtr &second) {
+    auto code = first->Execute();
+    if (code != 0) {
+        return code;
+    }
+
+    return second->Execute();
+}
+
+ParenthesesNode::ParenthesesNode(NodePtr node) : node_(std::move(node)) {
+}
+
+int ParenthesesNode::Execute() {
+    return node_->Execute();
 }
 } // namespace Lavash
