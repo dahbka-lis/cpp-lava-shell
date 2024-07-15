@@ -16,7 +16,7 @@ struct Token {
 
 class Tokenizer {
 public:
-    explicit Tokenizer(std::istream *istream);
+    explicit Tokenizer(std::istream *istream = nullptr);
 
     bool HasNext() const;
 

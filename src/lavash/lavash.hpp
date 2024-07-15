@@ -3,6 +3,6 @@
 namespace Lavash {
 class Lavash {
 public:
-    void Run();
+    static void Run();
 };
 } // namespace Lavash
