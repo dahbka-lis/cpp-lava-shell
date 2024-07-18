@@ -1,5 +1,7 @@
 #include "command.hpp"
 
+#include "../details/constants.hpp"
+
 #include <cstring>
 #include <fcntl.h>
 #include <sys/wait.h>
@@ -14,7 +16,7 @@ void Subcommand::Execute() {
 
     execvpe(args_[0], args_.data(), env_);
     perror("Lavash.Subcommand.Execute()");
-    _exit(127);
+    _exit(Details::Status::FAIL_EXEC);
 }
 
 void Subcommand::AddArg(const std::string &args) {
@@ -55,7 +57,7 @@ int Command::Execute() {
             fd_in = open(sub.GetInputFile().c_str(), O_RDONLY);
 
             if (fd_in == -1) {
-                status = 256;
+                status = Details::Status::FAIL_FILE;
                 perror("Error opening input file");
                 continue;
             }
@@ -67,7 +69,7 @@ int Command::Execute() {
         if (i + 1 < subcommands_.size()) {
             int fd_pipe[2];
             if (pipe(fd_pipe) < 0) {
-                status = 256;
+                status = Details::Status::FAIL_PIPE;
                 perror("pipe");
                 continue;
             }
@@ -84,7 +86,7 @@ int Command::Execute() {
             fd_out = open(sub.GetOutputFile().c_str(), flags, 0666);
 
             if (fd_out == -1) {
-                status = 256;
+                status = Details::Status::FAIL_FILE;
                 perror("Error opening output file");
                 continue;
             }
@@ -97,7 +99,7 @@ int Command::Execute() {
         if (pid == 0) {
             sub.Execute();
         } else if (pid < 0) {
-            status = 256;
+            status = Details::Status::FAIL_FORK;
             perror("fork");
             continue;
         }

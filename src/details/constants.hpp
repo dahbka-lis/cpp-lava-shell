@@ -14,4 +14,12 @@ enum class TokenType {
     R_PAREN,
     END
 };
+
+enum Status {
+    SUCCESS = 0,
+    FAIL_EXEC = 127,
+    FAIL_FILE = 256,
+    FAIL_PIPE = 513,
+    FAIL_FORK = 1025,
+};
 } // namespace Lavash::Details

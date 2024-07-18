@@ -1,5 +1,6 @@
 #include "nodes.hpp"
 
+#include "../details/constants.hpp"
 #include "../details/is_type_node.h"
 
 #include <utility>
@@ -22,7 +23,7 @@ int Lavash::BinaryOpNode::Execute() {
         return SelectOr();
     }
 
-    return 0;
+    return Status::SUCCESS;
 }
 
 int BinaryOpNode::SelectOr() {
@@ -65,11 +66,11 @@ int BinaryOpNode::SelectAnd() {
 
 int BinaryOpNode::ExecuteOr(const NodePtr &first, const NodePtr &second) {
     if (first == nullptr) {
-        return 0;
+        return Status::SUCCESS;
     }
 
     auto code = first->Execute();
-    if (code == 0 || second == nullptr) {
+    if (code == Status::SUCCESS || second == nullptr) {
         return code;
     }
 
@@ -78,11 +79,11 @@ int BinaryOpNode::ExecuteOr(const NodePtr &first, const NodePtr &second) {
 
 int BinaryOpNode::ExecuteAnd(const NodePtr &first, const NodePtr &second) {
     if (first == nullptr) {
-        return 0;
+        return Status::SUCCESS;
     }
 
     auto code = first->Execute();
-    if (code != 0 || second == nullptr) {
+    if (code != Status::SUCCESS || second == nullptr) {
         return code;
     }
 
