@@ -1,7 +1,10 @@
 #include "nodes.hpp"
 
-#include <cassert>
+#include "../details/is_type_node.h"
+
 #include <utility>
+
+using Lavash::Details::IsTypeNode;
 
 namespace Lavash {
 int CommandNode::Execute() {
@@ -14,64 +17,72 @@ BinaryOpNode::BinaryOpNode(BinaryOpType type, NodePtr left, NodePtr right)
 
 int Lavash::BinaryOpNode::Execute() {
     if (type_ == BinaryOpType::AND) {
-        return ExecuteAnd();
+        return SelectAnd();
     } else if (type_ == BinaryOpType::OR) {
-        return ExecuteOr();
+        return SelectOr();
     }
 
     return 0;
 }
 
-int BinaryOpNode::ExecuteOr() {
-    if (dynamic_cast<CommandNode *>(left_.get())) {
-        if (dynamic_cast<CommandNode *>(right_.get())) {
-            return SelectOr(left_, right_);
+int BinaryOpNode::SelectOr() {
+    if (IsTypeNode<CommandNode>(left_)) {
+        if (IsTypeNode<CommandNode>(right_)) {
+            return ExecuteOr(left_, right_);
         }
 
         auto right_ptr = dynamic_cast<BinaryOpNode *>(right_.get());
         if (right_ptr && right_ptr->type_ == BinaryOpType::OR) {
-            return SelectOr(left_, right_);
+            return ExecuteOr(left_, right_);
         }
 
-        return SelectOr(right_, left_);
+        return ExecuteOr(right_, left_);
     }
 
-    if (dynamic_cast<BinaryOpNode *>(left_.get())) {
+    if (IsTypeNode<BinaryOpNode>(left_)) {
         auto right_ptr = dynamic_cast<BinaryOpNode *>(right_.get());
         if (right_ptr && right_ptr->type_ == BinaryOpType::AND) {
-            return SelectOr(right_, left_);
+            return ExecuteOr(right_, left_);
         }
 
         if (dynamic_cast<ParenthesesNode *>(right_.get())) {
-            return SelectOr(right_, left_);
+            return ExecuteOr(right_, left_);
         }
 
-        return SelectOr(left_, right_);
+        return ExecuteOr(left_, right_);
     }
 
-    return SelectOr(left_, right_);
+    return ExecuteOr(left_, right_);
 }
 
-int BinaryOpNode::ExecuteAnd() {
-    if (dynamic_cast<ParenthesesNode *>(right_.get())) {
-        return SelectAnd(right_, left_);
+int BinaryOpNode::SelectAnd() {
+    if (IsTypeNode<ParenthesesNode>(right_)) {
+        return ExecuteAnd(right_, left_);
     }
 
-    return SelectAnd(left_, right_);
+    return ExecuteAnd(left_, right_);
 }
 
-int BinaryOpNode::SelectOr(const NodePtr &first, const NodePtr &second) {
+int BinaryOpNode::ExecuteOr(const NodePtr &first, const NodePtr &second) {
+    if (first == nullptr) {
+        return 0;
+    }
+
     auto code = first->Execute();
-    if (code == 0) {
+    if (code == 0 || second == nullptr) {
         return code;
     }
 
     return second->Execute();
 }
 
-int BinaryOpNode::SelectAnd(const NodePtr &first, const NodePtr &second) {
+int BinaryOpNode::ExecuteAnd(const NodePtr &first, const NodePtr &second) {
+    if (first == nullptr) {
+        return 0;
+    }
+
     auto code = first->Execute();
-    if (code != 0) {
+    if (code != 0 || second == nullptr) {
         return code;
     }
 

@@ -35,13 +35,13 @@ public:
     int Execute() override;
 
 private:
-    int ExecuteOr();
+    int SelectOr();
 
-    int ExecuteAnd();
+    int SelectAnd();
 
-    static int SelectOr(const NodePtr &first, const NodePtr &second);
+    static int ExecuteOr(const NodePtr &first, const NodePtr &second);
 
-    static int SelectAnd(const NodePtr &first, const NodePtr &second);
+    static int ExecuteAnd(const NodePtr &first, const NodePtr &second);
 
 private:
     BinaryOpType type_;
