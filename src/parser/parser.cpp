@@ -3,6 +3,8 @@
 #include <cassert>
 #include <iostream>
 
+using namespace Lavash::Details;
+
 namespace Lavash {
 Parser::Parser(Tokenizer *tokenizer, char **env)
     : tokenizer_(tokenizer), env_(env) {

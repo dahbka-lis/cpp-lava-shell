@@ -4,7 +4,7 @@
 
 #include <utility>
 
-using Lavash::Details::IsTypeNode;
+using namespace Lavash::Details;
 
 namespace Lavash {
 int CommandNode::Execute() {

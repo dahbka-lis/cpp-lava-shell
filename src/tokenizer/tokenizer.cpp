@@ -1,7 +1,8 @@
 #include "tokenizer.hpp"
 
-#include <cassert>
 #include <stdexcept>
+
+using Lavash::Details::TokenType;
 
 namespace Lavash {
 bool Token::operator==(const Token &other) const {

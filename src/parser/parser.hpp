@@ -17,7 +17,7 @@ private:
 
     void ConsumeToken();
 
-    void Eat(TokenType type);
+    void Eat(Details::TokenType type);
 
     NodePtr ParseExpression();
 

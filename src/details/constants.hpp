@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Lavash {
+namespace Lavash::Details {
 enum class BinaryOpType { AND, OR };
 
 enum class TokenType {
@@ -14,4 +14,4 @@ enum class TokenType {
     R_PAREN,
     END
 };
-} // namespace Lavash
+} // namespace Lavash::Details

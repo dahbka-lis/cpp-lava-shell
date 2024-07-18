@@ -29,7 +29,7 @@ private:
 
 class BinaryOpNode : public Node {
 public:
-    explicit BinaryOpNode(BinaryOpType type, NodePtr left = nullptr,
+    explicit BinaryOpNode(Details::BinaryOpType type, NodePtr left = nullptr,
                           NodePtr right = nullptr);
 
     int Execute() override;
@@ -44,7 +44,7 @@ private:
     static int ExecuteAnd(const NodePtr &first, const NodePtr &second);
 
 private:
-    BinaryOpType type_;
+    Details::BinaryOpType type_;
     NodePtr left_ = nullptr;
     NodePtr right_ = nullptr;
 };

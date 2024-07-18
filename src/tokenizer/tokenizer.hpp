@@ -10,7 +10,7 @@ namespace Lavash {
 struct Token {
     bool operator==(const Token &other) const;
 
-    TokenType type;
+    Details::TokenType type;
     std::string data;
 };
 
