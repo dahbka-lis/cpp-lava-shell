@@ -3,6 +3,7 @@
 #include "../src/tokenizer/tokenizer.hpp"
 
 using namespace Lavash;
+using Details::TokenType;
 
 TEST_CASE("Clear") {
     std::istringstream ss{""};

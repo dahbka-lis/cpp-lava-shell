@@ -20,7 +20,7 @@ public:
 
     const char *GetOutputFile() const;
 
-    const char *GetFirstArg() const;
+    const char *GetArg(int index) const;
 
 private:
     std::vector<char *> args_;
@@ -30,12 +30,21 @@ private:
 };
 
 class Command {
+    struct FileDescriptor {
+        int in;
+        int out;
+    };
+
 public:
     int Execute();
 
     void AddSubcommand(Subcommand &&subcommand);
 
+    void CloseDescriptors() const;
+
 private:
     std::vector<Subcommand> subcommands_;
+    FileDescriptor std_fd_;
+    FileDescriptor file_fd_;
 };
 } // namespace Lavash
