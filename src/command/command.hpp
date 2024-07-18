@@ -14,11 +14,13 @@ public:
 
     void SetInputFile(const std::string &input_file);
 
-    const std::string &GetInputFile() const;
+    const char *GetInputFile() const;
 
     void SetOutputFile(const std::string &output_file);
 
-    const std::string &GetOutputFile() const;
+    const char *GetOutputFile() const;
+
+    const char *GetFirstArg() const;
 
 private:
     std::vector<char *> args_;

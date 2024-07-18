@@ -22,4 +22,9 @@ enum Status {
     FAIL_PIPE = 513,
     FAIL_FORK = 1025,
 };
+
+namespace CustomCommands {
+static const char *kExit = "exit";
+static const char *kChangeDir = "cd";
+} // namespace CustomCommands
 } // namespace Lavash::Details

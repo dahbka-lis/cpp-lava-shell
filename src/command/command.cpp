@@ -27,16 +27,20 @@ void Subcommand::SetInputFile(const std::string &input_file) {
     input_file_ = input_file;
 }
 
-const std::string &Subcommand::GetInputFile() const {
-    return input_file_;
+const char *Subcommand::GetInputFile() const {
+    return input_file_.c_str();
 }
 
 void Subcommand::SetOutputFile(const std::string &output_file) {
     output_file_ = output_file;
 }
 
-const std::string &Subcommand::GetOutputFile() const {
-    return output_file_;
+const char *Subcommand::GetOutputFile() const {
+    return output_file_.c_str();
+}
+
+const char *Subcommand::GetFirstArg() const {
+    return args_.front();
 }
 
 int Command::Execute() {
@@ -51,10 +55,21 @@ int Command::Execute() {
 
     for (size_t i = 0; i < subcommands_.size(); ++i) {
         auto sub = subcommands_[i];
+        if (strcmp(sub.GetFirstArg(), Details::CustomCommands::kExit) == 0) {
+            dup2(std_in, STDIN_FILENO);
+            dup2(std_out, STDOUT_FILENO);
+            close(std_in);
+            close(std_out);
 
-        if (!sub.GetInputFile().empty()) {
             close(fd_in);
-            fd_in = open(sub.GetInputFile().c_str(), O_RDONLY);
+            close(fd_out);
+
+            _exit(Details::Status::SUCCESS);
+        }
+
+        if (strlen(sub.GetInputFile())) {
+            close(fd_in);
+            fd_in = open(sub.GetInputFile(), O_RDONLY);
 
             if (fd_in == -1) {
                 status = Details::Status::FAIL_FILE;
@@ -80,10 +95,10 @@ int Command::Execute() {
             fd_out = dup(std_out);
         }
 
-        if (!sub.GetOutputFile().empty()) {
+        if (strlen(sub.GetOutputFile())) {
             close(fd_out);
             auto flags = O_WRONLY | O_CREAT | O_TRUNC;
-            fd_out = open(sub.GetOutputFile().c_str(), flags, 0666);
+            fd_out = open(sub.GetOutputFile(), flags, 0666);
 
             if (fd_out == -1) {
                 status = Details::Status::FAIL_FILE;
@@ -104,13 +119,11 @@ int Command::Execute() {
             continue;
         }
 
-        close(fd_out);
         waitpid(pid, &status, 0);
     }
 
     dup2(std_in, STDIN_FILENO);
     dup2(std_out, STDOUT_FILENO);
-
     close(std_in);
     close(std_out);
 
