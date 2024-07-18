@@ -4,7 +4,8 @@
 #include <iostream>
 
 namespace Lavash {
-Parser::Parser(Tokenizer *tokenizer) : tokenizer_(tokenizer) {
+Parser::Parser(Tokenizer *tokenizer, char **env)
+    : tokenizer_(tokenizer), env_(env) {
     assert(tokenizer != nullptr && "Tokenizer should not be null");
 }
 
@@ -80,7 +81,7 @@ Command Parser::ParseCommand() {
 }
 
 Subcommand Parser::ParseSubcommand() {
-    Subcommand res;
+    Subcommand res{env_};
 
     while (IsCommandToken() && !IsPipeToken()) {
         if (CurrentToken().type == TokenType::INPUT) {

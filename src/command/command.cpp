@@ -6,6 +6,37 @@
 #include <unistd.h>
 
 namespace Lavash {
+Subcommand::Subcommand(char **env) : env_(env) {
+}
+
+void Subcommand::Execute() {
+    args_.push_back(nullptr);
+
+    execvpe(args_[0], args_.data(), env_);
+    perror("Lavash.Subcommand.Execute()");
+    _exit(127);
+}
+
+void Subcommand::AddArg(const std::string &args) {
+    args_.push_back(strdup(args.c_str()));
+}
+
+void Subcommand::SetInputFile(const std::string &input_file) {
+    input_file_ = input_file;
+}
+
+const std::string &Subcommand::GetInputFile() const {
+    return input_file_;
+}
+
+void Subcommand::SetOutputFile(const std::string &output_file) {
+    output_file_ = output_file;
+}
+
+const std::string &Subcommand::GetOutputFile() const {
+    return output_file_;
+}
+
 int Command::Execute() {
     int status = 0;
     pid_t pid;
@@ -86,33 +117,5 @@ int Command::Execute() {
 
 void Command::AddSubcommand(Subcommand &&subcommand) {
     subcommands_.push_back(std::move(subcommand));
-}
-
-void Subcommand::Execute() {
-    args_.push_back(nullptr);
-
-    execvp(args_[0], args_.data());
-    perror("Lavash.Subcommand.Execute()");
-    _exit(127);
-}
-
-void Subcommand::AddArg(const std::string &args) {
-    args_.push_back(strdup(args.c_str()));
-}
-
-void Subcommand::SetInputFile(const std::string &input_file) {
-    input_file_ = input_file;
-}
-
-const std::string &Subcommand::GetInputFile() const {
-    return input_file_;
-}
-
-void Subcommand::SetOutputFile(const std::string &output_file) {
-    output_file_ = output_file;
-}
-
-const std::string &Subcommand::GetOutputFile() const {
-    return output_file_;
 }
 } // namespace Lavash

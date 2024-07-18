@@ -2,10 +2,10 @@
 
 #include <cstdio>
 
-int main() {
+int main(int argc, char *argv[], char *env[]) {
     for (;;) {
         try {
-            Lavash::Lavash::Run();
+            Lavash::Run(env);
         } catch (...) {
             perror("Lavash.Run()");
         }

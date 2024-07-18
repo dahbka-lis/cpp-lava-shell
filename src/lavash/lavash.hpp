@@ -1,8 +1,5 @@
 #pragma once
 
 namespace Lavash {
-class Lavash {
-public:
-    static void Run();
-};
+void Run(char *env[]);
 } // namespace Lavash

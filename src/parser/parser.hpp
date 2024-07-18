@@ -8,7 +8,7 @@
 namespace Lavash {
 class Parser {
 public:
-    explicit Parser(Tokenizer *tokenizer);
+    explicit Parser(Tokenizer *tokenizer, char **env = nullptr);
 
     NodePtr Parse();
 
@@ -35,6 +35,7 @@ private:
 
 private:
     Tokenizer *tokenizer_;
+    char **env_ = nullptr;
 };
 
 } // namespace Lavash

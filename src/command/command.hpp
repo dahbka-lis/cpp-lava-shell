@@ -6,6 +6,8 @@
 namespace Lavash {
 class Subcommand {
 public:
+    explicit Subcommand(char **env = nullptr);
+
     void Execute();
 
     void AddArg(const std::string &args);
@@ -22,6 +24,7 @@ private:
     std::vector<char *> args_;
     std::string input_file_;
     std::string output_file_;
+    char **env_ = nullptr;
 };
 
 class Command {
